@@ -94,8 +94,17 @@ libpng-dev && \
 # Insure an SSL directory exists
 RUN mkdir -p /etc/apache2/ssl
 
+# Use an official Apache base image
+#FROM httpd:2.4
+
+# Copy your virtual host configuration files to the container
+COPY ./docker/apache2/conf/vhost.conf /usr/local/apache2/conf/extra/
+
 # Enable SSL support
 RUN a2enmod ssl && a2enmod rewrite
+
+# Add custom configuration (if needed)
+#COPY ./docker/apache2/custom.conf /usr/local/apache2/conf/
 
 # Enable apache modules
 RUN a2enmod rewrite headers
