@@ -47,7 +47,7 @@ RUN docker-php-ext-install pdo_mysql mysqli pdo_sqlite bcmath curl zip intl mbst
  # Insure an SSL directory exists
 RUN mkdir -p /etc/apache2/ssl
 
-COPY ./docker/apache2/conf/vhost.conf /etc/apache2/sites-available/000-default.conf
+COPY ./.docker/apache2/conf/vhost.conf /etc/apache2/sites-available/000-default.conf
 
  # Enable SSL support
 RUN a2enmod ssl && a2enmod rewrite
