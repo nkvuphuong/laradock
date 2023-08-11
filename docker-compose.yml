@@ -1,0 +1,40 @@
+version: '3.8'
+services:
+  php-apache:
+    container_name: ${CONTAINER_PREFIX}-php-apache
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - mysql
+    volumes:
+      - .:/var/www/html/
+    ports:
+      - "8000:80"
+
+  mysql:
+    container_name: ${CONTAINER_PREFIX}-mysql
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "9906:3306"
+    volumes:
+        - ./database/mount:/var/lib/mysql
+
+  phpmyadmin:
+      image: phpmyadmin/phpmyadmin
+      container_name: ${CONTAINER_PREFIX}-phpmyadmin
+      links:
+          - mysql
+      environment:
+          PMA_HOST: mysql
+          PMA_PORT: 3306
+          PMA_ARBITRARY: 1
+      restart: always
+      ports:
+          - 8081:80
