@@ -17,8 +17,14 @@ services:
         ports:
             - "80:80"
         working_dir: /var/www/html/
+
+    composer:
+        container_name: ${CONTAINER_PREFIX}-composer
+        image: composer:latest
+        volumes:
+            - .:/var/www/html/
+        working_dir: /var/www/html/
         command: composer install
-#        command: [ "echo", "CONTAINER_DOMAIN ${CONTAINER_DOMAIN}" ]
 
     mysql:
         container_name: ${CONTAINER_PREFIX}-mysql
@@ -45,11 +51,16 @@ services:
             PMA_ARBITRARY: 1
         restart: always
         ports:
-            - 8081:80
+            - "8081:80"
 
     rabbitmq:
         image: rabbitmq:3.12-management
         container_name: ${CONTAINER_PREFIX}-rabbitmq-management
         ports:
-            - 5672:5672
-            - 15672:15672
+            - "5672:5672" # Cổng AMQP
+            - "15672:15672" # Cổng giao diện quản lý
+        environment:
+            RABBITMQ_DEFAULT_USER: rabbitusr
+            RABBITMQ_DEFAULT_PASS: rabbitpw
+        volumes:
+            - ./rabbitmq/data:/var/lib/rabbitmq  # Lưu trữ dữ liệu RabbitMQ
