@@ -16,6 +16,8 @@ services:
             - ./.docker/apache2/conf/vhost.conf:/etc/apache2/sites-available/000-default.conf
         ports:
             - "80:80"
+        working_dir: /var/www/html/
+        command: composer install
 #        command: [ "echo", "CONTAINER_DOMAIN ${CONTAINER_DOMAIN}" ]
 
     mysql:
