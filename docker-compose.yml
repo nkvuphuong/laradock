@@ -1,40 +1,53 @@
 version: '3.8'
 services:
-  php-apache:
-    container_name: ${CONTAINER_PREFIX}-php-apache
-    build:
-      context: .
-      dockerfile: Dockerfile
-    depends_on:
-      - mysql
-    volumes:
-      - .:/var/www/html/
-    ports:
-      - "80:80"
+    php-apache:
+        container_name: ${CONTAINER_PREFIX}-php-apache
+        build:
+            context: .
+            dockerfile: Dockerfile
+        #      args:
+        #          CONTAINER_DOMAIN: ${CONTAINER_DOMAIN}
+#        environment:
+#            - CONTAINER_DOMAIN=${CONTAINER_DOMAIN}
+        depends_on:
+            - mysql
+        volumes:
+            - .:/var/www/html/
+            - ./.docker/apache2/conf/vhost.conf:/etc/apache2/sites-available/000-default.conf
+        ports:
+            - "80:80"
+#        command: [ "echo", "CONTAINER_DOMAIN ${CONTAINER_DOMAIN}" ]
 
-  mysql:
-    container_name: ${CONTAINER_PREFIX}-mysql
-    image: mysql
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_USER: ${DB_USERNAME}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-    ports:
-      - "9906:3306"
-    volumes:
-        - ./database/mount:/var/lib/mysql
+    mysql:
+        container_name: ${CONTAINER_PREFIX}-mysql
+        image: mysql
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: ${DB_DATABASE}
+            MYSQL_USER: ${DB_USERNAME}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
+        ports:
+            - "9906:3306"
+        volumes:
+            - ./database/mount:/var/lib/mysql
 
-  phpmyadmin:
-      image: phpmyadmin/phpmyadmin
-      container_name: ${CONTAINER_PREFIX}-phpmyadmin
-      links:
-          - mysql
-      environment:
-          PMA_HOST: mysql
-          PMA_PORT: 3306
-          PMA_ARBITRARY: 1
-      restart: always
-      ports:
-          - 8081:80
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        container_name: ${CONTAINER_PREFIX}-phpmyadmin
+        links:
+            - mysql
+        environment:
+            PMA_HOST: mysql
+            PMA_PORT: 3306
+            PMA_ARBITRARY: 1
+        restart: always
+        ports:
+            - 8081:80
+
+    rabbitmq:
+        image: rabbitmq:3.12-management
+        container_name: ${CONTAINER_PREFIX}-rabbitmq-management
+        ports:
+            - 5672:5672
+            - 15672:15672
