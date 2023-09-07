@@ -38,7 +38,7 @@ services:
         ports:
             - "9906:3306"
         volumes:
-            - ./database/mount:/var/lib/mysql
+            - ./public/storage/mount/database/mysql:/var/lib/mysql
 
     phpmyadmin:
         image: phpmyadmin/phpmyadmin
@@ -63,4 +63,4 @@ services:
             RABBITMQ_DEFAULT_USER: rabbitusr
             RABBITMQ_DEFAULT_PASS: rabbitpw
         volumes:
-            - ./rabbitmq/data:/var/lib/rabbitmq  # Lưu trữ dữ liệu RabbitMQ
+            - ./public/storage/mount/rabbitmq:/var/lib/rabbitmq  # Lưu trữ dữ liệu RabbitMQ
