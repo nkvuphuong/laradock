@@ -18,7 +18,7 @@ try {
 
         while (true) {
             // Lấy công việc từ đầu hàng đợi
-            $jobData = $client->lpop('myqueue');
+            $jobData = $client->rpop('myqueue');
 
             if ($jobData !== null) {
                 // Xử lý công việc ở đây
@@ -28,7 +28,7 @@ try {
                 echo "==============================================\n";
             } else {
                 // Nếu hàng đợi trống, chờ một khoảng thời gian trước khi thử lại
-                sleep(1);
+                sleep(5);
                 echo "[*] Retry\n";
             }
         }
