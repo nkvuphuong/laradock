@@ -72,4 +72,16 @@ services:
             - "6379:6379"
             - "8001:8001"
         volumes:
-            - /local-data/:/data
+            - ./public/storage/mount/redis:/data
+
+    mongodb-server:
+        image: mongodb/mongodb-community-server:latest
+        container_name: ${CONTAINER_PREFIX}-mongodb-server
+        ports:
+            - "27017:27017"
+        volumes:
+            - ./public/storage/mount/database/mongodb/db:/data/db
+            - ./public/storage/mount/database/mongodb/configdb:/data/configdb
+        environment:
+            MONGODB_INITDB_ROOT_USERNAME: mongours
+            MONGODB_INITDB_ROOT_PASSWORD: mongopw

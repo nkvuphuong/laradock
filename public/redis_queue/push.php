@@ -12,6 +12,12 @@ try {
         'read_write_timeout' => 0
     ]);
 
+    /*$client = new Client([
+        'host' => 'demoqueue-0001-001.elku6n.0001.apse2.cache.amazonaws.com',
+        'port' => 6379,
+        'read_write_timeout' => 0
+    ]);*/
+
 
     $messages = [];
     for ($i = 0; $i <= 100; $i++) {
