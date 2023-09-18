@@ -5,12 +5,12 @@ use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
 try {
-    $queueName = 'task_queue';
+    $routingKey = 'task_queue';
     $connection = new AMQPStreamConnection('rabbitmq', 5672, 'rabbitusr', 'rabbitpw');
     $channel = $connection->channel();
 
     $durable = true; //make sure that the queue will survive a RabbitMQ node restart
-    $channel->queue_declare($queueName, false, $durable, false, false);
+    $channel->queue_declare($routingKey, false, $durable, false, false);
 
     echo " [*] Waiting for messages. To exit press CTRL+C\n";
 
@@ -24,7 +24,7 @@ try {
 
     $channel->basic_qos(null, 1, null); // (Fair dispatch) This tells RabbitMQ not to give more than one message to a worker at a time. Or, in other words, don't dispatch a new message to a worker until it has processed and acknowledged the previous one. Instead, it will dispatch it to the next worker that is not still busy.
 
-    $channel->basic_consume($queueName, '', false, false, false, false, $callback);
+    $channel->basic_consume($routingKey, '', false, false, false, false, $callback);
 
     while ($channel->is_open()) {
         $channel->wait();
