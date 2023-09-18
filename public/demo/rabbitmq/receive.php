@@ -1,5 +1,5 @@
 <?php
-require_once '../../vendor/autoload.php';
+require_once '../../../vendor/autoload.php';
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
@@ -9,16 +9,18 @@ try {
 
     $channel->queue_declare('greeting', false, false, false, false);
 
-    $data = implode(' ', array_slice($argv, 1));
-    if (empty($data)) {
-        $data = 'Hi there: ' . date('c');
+    echo " [*] Waiting for messages. To exit press CTRL+C\n";
+
+    $callback = function ($message) {
+        echo "[x] Received message ", $message->getBody(), "\n";
+    };
+
+    $channel->basic_consume('greeting', '', false, true, false, false, $callback);
+
+    while ($channel->is_open()) {
+        $channel->wait();
     }
 
-    $msg = new AMQPMessage($data);
-
-    $channel->basic_publish($msg, '', 'greeting');
-
-    echo "Sent message: <<$data>>";
     $channel->close();
     $connection->close();
 } catch (Exception $e) {

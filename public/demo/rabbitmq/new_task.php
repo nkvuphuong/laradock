@@ -1,5 +1,5 @@
 <?php
-require_once '../vendor/autoload.php';
+require_once '../../../vendor/autoload.php';
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
@@ -9,12 +9,16 @@ try {
 
     $channel->queue_declare('greeting', false, false, false, false);
 
-    $msgBody = 'Hi there: ' . date('c');
-    $msg = new AMQPMessage($msgBody);
+    $data = implode(' ', array_slice($argv, 1));
+    if (empty($data)) {
+        $data = 'Hi there: ' . date('c');
+    }
+
+    $msg = new AMQPMessage($data);
 
     $channel->basic_publish($msg, '', 'greeting');
 
-    echo "Sent message: <<$msgBody>>";
+    echo "Sent message: <<$data>>";
     $channel->close();
     $connection->close();
 } catch (Exception $e) {
