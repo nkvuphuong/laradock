@@ -23,7 +23,7 @@ try {
             if ($jobData !== null) {
                 // Xử lý công việc ở đây
                 echo "[+] Processing job: $jobData\n";
-                sleep(2);
+//                sleep(2);
                 echo "[-] Processed: $jobData\n";
                 echo "==============================================\n";
             } else {
