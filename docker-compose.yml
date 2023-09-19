@@ -17,6 +17,8 @@ services:
         ports:
             - "80:80"
         working_dir: /var/www/html/
+        networks:
+            - 'global'
 
     composer:
         container_name: ${CONTAINER_PREFIX}-composer
@@ -25,6 +27,8 @@ services:
             - .:/var/www/html/
         working_dir: /var/www/html/
         command: composer install
+        networks:
+            - 'global'
 
     mysql:
         container_name: ${CONTAINER_PREFIX}-mysql
@@ -39,6 +43,8 @@ services:
             - "9906:3306"
         volumes:
             - ./public/storage/mount/database/mysql:/var/lib/mysql
+        networks:
+            - 'global'
 
     phpmyadmin:
         image: phpmyadmin/phpmyadmin
@@ -52,6 +58,8 @@ services:
         restart: always
         ports:
             - "8081:80"
+        networks:
+            - 'global'
 
     rabbitmq:
         image: rabbitmq:3.12-management
@@ -64,6 +72,8 @@ services:
             RABBITMQ_DEFAULT_PASS: rabbitpw
         volumes:
             - ./public/storage/mount/rabbitmq:/var/lib/rabbitmq  # Lưu trữ dữ liệu RabbitMQ
+        networks:
+            - 'global'
 
     redis:
         image: redis/redis-stack:latest
@@ -73,6 +83,9 @@ services:
             - "8001:8001"
         volumes:
             - ./public/storage/mount/redis:/data
+            - ./docker/redis/redis.conf:/etc/redis.conf
+        networks:
+            - 'global'
 
     mongodb-server:
         image: mongodb/mongodb-community-server:latest
@@ -85,3 +98,30 @@ services:
         environment:
             MONGODB_INITDB_ROOT_USERNAME: mongours
             MONGODB_INITDB_ROOT_PASSWORD: mongopw
+        networks:
+            - 'global'
+
+    prometheus:
+        image: prom/prometheus:latest
+        container_name: ${CONTAINER_PREFIX}-prometheus
+        ports:
+            - "9090:9090"
+        volumes:
+            - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+        networks:
+            - 'global'
+
+#    redis-exporter:
+#        image: bitnami/redis-exporter
+#        container_name: ${CONTAINER_PREFIX}-redis-exporter
+#        ports:
+#            - "9121:9121"
+#        networks:
+#            - 'global'
+#        command:
+#            - '--redis.addr=redis://redis:6379'
+
+
+networks:
+    global:
+        driver: bridge
