@@ -17,6 +17,11 @@ try {
     $callback = static function (PhpAmqpLib\Message\AMQPMessage $msg) {
         $sleepingTime = rand(1, 5);
         echo " [x] Received: waiting for $sleepingTime seconds ", $msg->body, "\n";
+
+        if ($sleepingTime == 3) {
+            throw new Exception('Die');
+        }
+
         sleep($sleepingTime);
         echo " [x] Done: " . date('c') . "\n";
         $msg->ack();
