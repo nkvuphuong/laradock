@@ -33,6 +33,8 @@ RUN apt-get update --fix-missing && \
         libjpeg62-turbo-dev \
         libpng-dev \
         gettext-base \
+        pkg-config \
+        libssl-dev \
         libmagickwand-dev && \
     rm -rf /var/lib/apt/lists/*
  # Install composer
