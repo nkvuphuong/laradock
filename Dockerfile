@@ -49,6 +49,10 @@ RUN pecl install imagick && \
     docker-php-ext-enable imagick
  # Install other PHP extensions
 RUN docker-php-ext-install pdo_mysql mysqli pdo_sqlite bcmath curl zip intl mbstring gettext calendar exif gd sockets
+
+RUN pecl install mongodb \
+    &&  echo "extension=mongodb.so" > $PHP_INI_DIR/conf.d/mongo.ini
+
  # Insure an SSL directory exists
 RUN mkdir -p /etc/apache2/ssl
 
